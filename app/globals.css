@@ -1,0 +1,1060 @@
+@import "tailwindcss";
+
+@font-face {
+  font-family: "ABC Diatype";
+  src:
+    url("/fonts/ABCDiatype-Regular.woff2") format("woff2"),
+    url("/fonts/ABCDiatype-Regular.woff") format("woff");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+  min-width: 320px;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ---------------------------------------------------------------------------
+   Human shell — ported verbatim from the static index.html. Every selector
+   that originally hit `body` or `body[data-theme]` is scoped to .human-shell
+   so the Agent layout stays untouched. The visual behavior is unchanged.
+--------------------------------------------------------------------------- */
+
+.human-shell {
+  color-scheme: light;
+  --bg: #f4f4f4;
+  --text: #1f1d1b;
+  --muted: #8c8780;
+  --soft: rgba(31, 29, 27, 0.08);
+  --panel: rgba(255, 255, 255, 0.74);
+  --card-shadow: 0 10px 30px rgba(17, 16, 15, 0.06);
+  --label: #9d988f;
+  --radius: 16px;
+  --project-gap: clamp(14px, 1.2vw, 18px);
+  --grid-margin: 16px;
+  --grid-gutter: 16px;
+  --three-col-pad: 48px;
+  --carousel-pad: 16px;
+
+  font-family: "ABC Diatype", sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  font-synthesis: none;
+  line-height: 20px;
+  letter-spacing: -0.02em;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background:
+    radial-gradient(circle at 50% 110%, rgba(235, 202, 143, 0.5), transparent 18%),
+    radial-gradient(circle at 58% 100%, rgba(235, 146, 190, 0.14), transparent 20%),
+    var(--bg);
+  color: var(--text);
+  transition: background-color 180ms ease, color 180ms ease;
+  min-height: 100svh;
+}
+
+.human-shell[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #030303;
+  --text: #f4f1ee;
+  --muted: #8e8b87;
+  --soft: rgba(255, 255, 255, 0.08);
+  --panel: rgba(255, 255, 255, 0.04);
+  --card-shadow: none;
+  --label: #6f6a65;
+  background:
+    radial-gradient(circle at 50% 120%, rgba(18, 18, 18, 0.75), transparent 22%),
+    #030303;
+}
+
+.human-shell a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.human-shell button {
+  font: inherit;
+  color: inherit;
+}
+
+.human-shell .sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.human-shell .page {
+  position: relative;
+  min-height: 100svh;
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 22px clamp(20px, 2vw, 28px) 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+:is(.human-shell, .agent-doc) .site-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  padding-inline: 16px;
+  pointer-events: none;
+}
+
+:is(.human-shell, .agent-doc) .site-header > * {
+  pointer-events: auto;
+}
+
+:is(.human-shell, .agent-doc) .header-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-left: auto;
+}
+
+:is(.human-shell, .agent-doc) .mark {
+  display: inline-flex;
+  width: 24px;
+  height: 24px;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  transform: translate(1px, 1px);
+}
+
+:is(.human-shell, .agent-doc) .mark-frame {
+  display: block;
+  width: 24px;
+  height: 24px;
+  filter: brightness(0) saturate(100%);
+}
+
+:is(.human-shell[data-theme="dark"], .agent-doc[data-theme="dark"]) .mark-frame {
+  filter: none;
+}
+
+.human-shell .mobile-toggle,
+.human-shell .theme-toggle {
+  border: 0;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+}
+
+.human-shell .mobile-toggle {
+  display: inline-flex;
+  align-items: center;
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.human-shell .theme-toggle {
+  display: inline-flex;
+  width: 22px;
+  height: 22px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+}
+
+.human-shell .theme-toggle::before {
+  content: "";
+  width: 12px;
+  height: 12px;
+  border-radius: 999px;
+  background: var(--text);
+  box-shadow: 0 0 0 1px var(--soft);
+}
+
+.human-shell .content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+:is(.human-shell, .agent-doc) .info-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+  width: 100%;
+}
+
+:is(.human-shell, .agent-doc) .panel-title,
+:is(.human-shell, .agent-doc) .name {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+}
+
+:is(.human-shell, .agent-doc) .panel-copy,
+:is(.human-shell, .agent-doc) .panel-list {
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 20px;
+}
+
+:is(.human-shell, .agent-doc) .panel-role {
+  margin: 1px 0 0;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 20px;
+}
+
+:is(.human-shell, .agent-doc) .panel-intro-body {
+  margin-top: 0;
+}
+
+:is(.human-shell, .agent-doc) .mobile-only {
+  display: none;
+}
+
+:is(.human-shell, .agent-doc) .name + .panel-copy,
+:is(.human-shell, .agent-doc) .panel-title + .panel-copy,
+:is(.human-shell, .agent-doc) .panel-title + .panel-list {
+  margin-top: 1px;
+}
+
+:is(.human-shell, .agent-doc) .panel-list {
+  padding: 0;
+  list-style: none;
+}
+
+:is(.human-shell, .agent-doc) .panel-list li + li {
+  margin-top: 0;
+  display: block;
+}
+
+:is(.human-shell, .agent-doc) .panel-modes-list li {
+  position: relative;
+  padding-left: 12px;
+}
+
+:is(.human-shell, .agent-doc) .panel-modes-list li.is-active {
+  color: var(--text);
+}
+
+:is(.human-shell, .agent-doc) .panel-modes-list li.is-active::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: var(--text);
+}
+
+:is(.human-shell, .agent-doc) .panel,
+:is(.human-shell, .agent-doc) .panel-intro,
+:is(.human-shell, .agent-doc) .panel-services,
+:is(.human-shell, .agent-doc) .panel-about,
+:is(.human-shell, .agent-doc) .panel-contact,
+:is(.human-shell, .agent-doc) .panel-modes {
+  max-width: 240px;
+}
+
+.human-shell .panel[data-extra],
+.agent-doc .panel[data-extra] {
+  display: block;
+}
+
+/* Agent doc adds markdown-style "## "/"- " prefixes to h2 and ul li globally.
+   Suppress those inside the panel grid so it visually mirrors the human view. */
+.agent-doc .info-grid .panel-title::before,
+.agent-doc .info-grid .panel-list > li::before {
+  content: none;
+}
+
+.agent-doc .panel-modes-list > li:not(.is-active)::before {
+  content: none;
+}
+
+.agent-doc .info-grid h2 {
+  margin: 0;
+}
+
+.human-shell .projects {
+  margin-top: 42px;
+  padding-top: 28px;
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  overflow: hidden;
+}
+
+.human-shell .project-marquee {
+  overflow: hidden;
+  padding-inline: var(--carousel-pad);
+  cursor: grab;
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.human-shell .project-marquee.is-dragging {
+  cursor: grabbing;
+}
+
+.human-shell .project-strip {
+  display: flex;
+  width: max-content;
+  align-items: flex-end;
+  gap: 16px;
+  will-change: transform;
+  padding-bottom: 8px;
+}
+
+.human-shell .project {
+  flex: 0 0 auto;
+  min-width: 0;
+  width: 240px;
+}
+
+.human-shell .project.project-w240 { width: 240px; }
+.human-shell .project.project-w360 { width: 360px; }
+.human-shell .project.project-w480 { width: 480px; }
+.human-shell .project.project-w500 { width: 500px; }
+.human-shell .project.project-w640 { width: 640px; }
+
+.human-shell .project-card {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 360px;
+  overflow: hidden;
+  border-radius: var(--radius);
+  border: 1px solid var(--soft);
+  box-shadow: none;
+  background: rgba(31, 29, 27, 0.02);
+}
+
+.human-shell[data-theme="dark"] .project-card {
+  border-color: rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.human-shell .project-card::before {
+  content: "";
+  position: absolute;
+  inset: 15px;
+  border: 1px dashed rgba(31, 29, 27, 0.12);
+  border-radius: 10px;
+}
+
+.human-shell[data-theme="dark"] .project-card::before {
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.human-shell .project-card.serotonin,
+.human-shell .project-card.prototype,
+.human-shell .project-card.unqork,
+.human-shell .project-card.google {
+  display: block;
+  padding: 0;
+  background: transparent;
+}
+
+.human-shell .project-card.ascii-image-card {
+  border: 0;
+  background: #040404;
+  cursor: pointer;
+  isolation: isolate;
+}
+
+.human-shell .project-card.ascii-image-card::before {
+  display: none;
+}
+
+.human-shell .project-card.ascii-image-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  opacity: 1;
+  background:
+    linear-gradient(180deg, rgba(0, 0, 0, 0.04), transparent 34%, rgba(0, 0, 0, 0.1)),
+    radial-gradient(circle at 50% 45%, transparent 58%, rgba(0, 0, 0, 0.08));
+  transition: opacity 180ms ease;
+}
+
+.human-shell .project-card.ascii-image-card.is-revealed::after {
+  opacity: 0;
+}
+
+.human-shell .project-image {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 180ms ease;
+}
+
+.human-shell .project-card.ascii-image-card.is-revealed .project-image {
+  opacity: 1;
+}
+
+.human-shell .ascii-image-canvas {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  height: 100%;
+  opacity: 1;
+  pointer-events: none;
+  transition: opacity 180ms ease;
+}
+
+.human-shell .project-card.ascii-image-card.is-revealed .ascii-image-canvas {
+  opacity: 0;
+}
+
+@media (max-width: 1000px) {
+  .human-shell .page {
+    padding-top: 24px;
+    gap: 16px;
+  }
+
+  .human-shell .content {
+    min-height: calc(100svh - 72px);
+  }
+
+  :is(.human-shell, .agent-doc) .info-grid {
+    margin-top: 24px;
+    grid-template-columns: 1fr;
+    column-gap: 0;
+    row-gap: 24px;
+  }
+
+  :is(.human-shell, .agent-doc) .mobile-only {
+    display: block;
+  }
+
+  :is(.human-shell, .agent-doc) .desktop-only {
+    display: none;
+  }
+
+  :is(.human-shell, .agent-doc) .panel-intro,
+  :is(.human-shell, .agent-doc) .panel-services,
+  :is(.human-shell, .agent-doc) .panel-about,
+  :is(.human-shell, .agent-doc) .panel-contact,
+  :is(.human-shell, .agent-doc) .panel-modes {
+    grid-column: 1 / -1;
+  }
+
+  :is(.human-shell, .agent-doc) .name + .panel-copy,
+  :is(.human-shell, .agent-doc) .panel-title + .panel-copy,
+  :is(.human-shell, .agent-doc) .panel-title + .panel-list {
+    margin-top: 2px;
+  }
+
+  :is(.human-shell, .agent-doc) .panel-copy,
+  :is(.human-shell, .agent-doc) .panel-list {
+    max-width: 18rem;
+  }
+
+  .human-shell .projects {
+    padding-top: 24px;
+  }
+}
+
+@media (min-width: 1001px) {
+  :is(.human-shell, .agent-doc) .desktop-only {
+    display: block;
+  }
+
+  .human-shell .page {
+    width: 100%;
+    padding: 16px 0 24px;
+    gap: 0;
+  }
+
+  :is(.human-shell, .agent-doc) .site-header {
+    position: absolute;
+    top: 16px;
+    left: 0;
+    right: 0;
+    z-index: 2;
+  }
+
+  .human-shell .mobile-toggle {
+    display: none;
+  }
+
+  .human-shell .content {
+    gap: 0;
+  }
+
+  :is(.human-shell, .agent-doc) .info-grid {
+    width: 100%;
+    min-height: 140px;
+    margin: 0;
+    padding-inline: var(--grid-margin);
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: var(--grid-gutter);
+    row-gap: 0;
+    align-items: start;
+  }
+
+  :is(.human-shell, .agent-doc) .panel-title,
+  :is(.human-shell, .agent-doc) .name,
+  :is(.human-shell, .agent-doc) .panel-copy,
+  :is(.human-shell, .agent-doc) .panel-list,
+  :is(.human-shell, .agent-doc) .panel-role {
+    font-size: 14px;
+    line-height: 20px;
+  }
+
+  :is(.human-shell, .agent-doc) .panel,
+  :is(.human-shell, .agent-doc) .panel-copy,
+  :is(.human-shell, .agent-doc) .panel-list,
+  :is(.human-shell, .agent-doc) .panel-role {
+    max-width: none;
+  }
+
+  .human-shell .panel[data-extra] {
+    display: block;
+  }
+
+  :is(.human-shell, .agent-doc) .panel-intro {
+    grid-column: 2 / span 3;
+    padding-right: 0;
+  }
+
+  :is(.human-shell, .agent-doc) .panel-services {
+    grid-column: 6 / span 2;
+    padding-right: 0;
+  }
+
+  :is(.human-shell, .agent-doc) .panel-about {
+    grid-column: 7 / span 2;
+    padding-right: 0;
+  }
+
+  :is(.human-shell, .agent-doc) .panel-contact {
+    grid-column: 9 / span 2;
+    padding-right: 0;
+  }
+
+  :is(.human-shell, .agent-doc) .panel-modes {
+    grid-column: 11 / span 2;
+    padding-right: 0;
+  }
+
+  :is(.human-shell, .agent-doc) .panel-intro,
+  :is(.human-shell, .agent-doc) .panel-services,
+  :is(.human-shell, .agent-doc) .panel-about,
+  :is(.human-shell, .agent-doc) .panel-contact,
+  :is(.human-shell, .agent-doc) .panel-modes {
+    max-width: 240px;
+  }
+
+  .human-shell .projects {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 24px;
+    margin: 0;
+    padding-top: 0;
+  }
+
+  .human-shell .project-marquee {
+    padding-inline: var(--carousel-pad);
+  }
+
+  .human-shell .project-strip {
+    gap: var(--project-gap);
+    align-items: end;
+  }
+}
+
+@media (min-width: 1400px) {
+  .human-shell .projects {
+    padding-top: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .human-shell {
+    transition: none;
+  }
+
+  .human-shell .project-strip {
+    transform: none !important;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Agent mode — plain markdown-style document. Mirrors the look of /llms.txt
+   so an LLM client (or a human reading the same source) gets a single,
+   monospace, single-column reference doc with no visual hierarchy beyond
+   leading `#` markers on headings and `-` markers on list items.
+--------------------------------------------------------------------------- */
+
+.agent-doc {
+  font-family: "ABC Diatype", sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  font-synthesis: none;
+  line-height: 20px;
+  letter-spacing: -0.02em;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: #000;
+  background: #fff;
+  padding: 16px 16px 64px;
+  overflow-wrap: anywhere;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  position: relative;
+  min-height: 100svh;
+
+  /* Local tokens, default to the light palette. The dark variant below
+     overrides them so the rest of the rules can stay theme-agnostic. */
+  --doc-fg: #000;
+  --doc-bg: #fff;
+  --doc-meta: #666;
+  --doc-rule: rgba(0, 0, 0, 0.1);
+
+  /* Aliases so shared panel/grid styles (which read --text/--muted) work
+     when the same class is rendered inside the agent shell. */
+  --text: var(--doc-fg);
+  --muted: var(--doc-meta);
+  --grid-margin: 16px;
+  --grid-gutter: 16px;
+}
+
+.agent-doc[data-theme="dark"] {
+  color: #f4f1ee;
+  background: #030303;
+  --doc-fg: #f4f1ee;
+  --doc-bg: #030303;
+  --doc-meta: #888;
+  --doc-rule: rgba(255, 255, 255, 0.1);
+}
+
+/* Mirror the responsive top-padding/gap of .human-shell .page so the
+   panel grid and mark logo land at the same vertical position when
+   toggling between modes. Placed after the .agent-doc base so it wins. */
+@media (max-width: 1000px) {
+  .agent-doc {
+    gap: 32px;
+  }
+}
+
+@media (min-width: 1001px) {
+  .agent-doc {
+    gap: 32px;
+  }
+}
+
+/* When the active shell is dark, lift the whole page background so the
+   document doesn't sit inside a stripe of light. The body's own
+   data-theme is mirrored from the active shell. */
+body[data-theme="dark"] {
+  background: #030303;
+}
+
+.agent-doc h1,
+.agent-doc h2,
+.agent-doc h3,
+.agent-doc h4,
+.agent-doc h5,
+.agent-doc h6 {
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 400;
+  margin: 24px 0 8px;
+  line-height: 20px;
+  letter-spacing: -0.02em;
+  color: var(--doc-fg);
+}
+
+.agent-doc p {
+  margin: 0 0 12px;
+}
+
+.agent-doc blockquote {
+  margin: 0 0 12px;
+  padding: 0;
+  border: 0;
+  color: var(--muted);
+}
+
+.agent-doc ul,
+.agent-doc ol {
+  margin: 0 0 12px;
+}
+
+.agent-doc li {
+  margin: 0 0 4px;
+}
+
+.agent-doc ul.entries {
+  list-style: none;
+  padding-left: 0;
+  margin-top: 16px;
+}
+
+.agent-doc ul.entries > li {
+  margin: 0 0 20px;
+}
+
+.agent-doc ul.entries .entry-summary {
+  margin-top: 2px;
+  color: var(--muted);
+}
+
+.agent-doc a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.agent-doc code,
+.agent-doc pre {
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  letter-spacing: inherit;
+  background: transparent;
+  padding: 0;
+  border: 0;
+}
+
+.agent-doc pre {
+  margin: 0 0 16px;
+  white-space: pre-wrap;
+  word-break: break-word;
+  color: var(--doc-meta);
+}
+
+.agent-doc hr {
+  border: 0;
+  border-top: 1px solid var(--doc-rule);
+  margin: 24px 0;
+}
+
+.agent-doc strong {
+  font-weight: 700;
+}
+
+.agent-doc em {
+  font-style: italic;
+}
+
+.agent-doc .meta {
+  color: var(--doc-meta);
+}
+
+.agent-doc article.editorial {
+  max-width: 500px;
+  margin: 0;
+  padding: 0 16px 32px;
+}
+
+.agent-doc .toggle {
+  margin-bottom: 24px;
+}
+
+.agent-doc .toggle a {
+  text-decoration: none;
+}
+
+.agent-doc .toggle a.active {
+  text-decoration: underline;
+}
+
+.agent-doc .site-header {
+  position: sticky;
+  top: 16px;
+  z-index: 10;
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  margin-bottom: 0;
+  background: transparent;
+}
+
+.agent-doc .header-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-left: auto;
+}
+
+.agent-doc .theme-toggle {
+  border: 0;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+  display: inline-flex;
+  width: 22px;
+  height: 22px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  color: inherit;
+}
+
+.agent-doc .theme-toggle::before {
+  content: "";
+  width: 12px;
+  height: 12px;
+  border-radius: 999px;
+  background: currentColor;
+  box-shadow: 0 0 0 1px var(--doc-rule);
+}
+
+.agent-doc footer {
+  margin-top: 48px;
+  padding-top: 16px;
+  border-top: 1px solid var(--doc-rule);
+  color: var(--doc-meta);
+}
+
+/* Designed agent doc — labelled sections in a vertical stack, separated by
+   faint horizontal rules. Section label sits above body in foreground color,
+   body content in --doc-meta. Matches the static designs in /designs/agent. */
+
+.agent-doc .agent-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  max-width: 65ch;
+  margin: 0;
+}
+
+.agent-doc .agent-section {
+  margin: 0 0 24px;
+}
+
+.agent-doc .agent-section--ruled {
+  border-top: 1px solid var(--doc-rule);
+  padding-top: 24px;
+}
+
+.agent-doc .section-label {
+  margin: 0 0 8px;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+  letter-spacing: -0.02em;
+  color: var(--doc-fg);
+}
+
+.agent-doc .section-body {
+  margin: 0;
+  color: var(--doc-meta);
+}
+
+.agent-doc .section-body a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.agent-doc .section-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.agent-doc .section-list > li {
+  margin: 0;
+}
+
+.agent-doc .section-list > li::before {
+  content: none;
+}
+
+.agent-doc .work-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.agent-doc .work-entry {
+  padding: 0 0 32px;
+  margin: 0;
+}
+
+.agent-doc .work-entry + .work-entry {
+  border-top: 1px solid var(--doc-rule);
+  padding-top: 32px;
+}
+
+.agent-doc .work-title {
+  margin: 0 0 12px;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+  letter-spacing: -0.02em;
+  color: var(--doc-fg);
+}
+
+.agent-doc .work-meta {
+  color: var(--doc-meta);
+  font-weight: 400;
+}
+
+.agent-doc .work-body p,
+.agent-doc .work-body li,
+.agent-doc .work-body blockquote {
+  color: var(--doc-meta);
+}
+
+.agent-doc .work-body h2,
+.agent-doc .work-body h3,
+.agent-doc .work-body h4 {
+  display: none;
+}
+
+.agent-doc .work-body p {
+  margin: 0 0 12px;
+}
+
+.agent-doc .work-body p:last-child {
+  margin-bottom: 0;
+}
+
+.agent-doc .work-body strong {
+  color: var(--doc-fg);
+  font-weight: 600;
+}
+
+.agent-doc .work-body ul {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 12px;
+}
+
+.agent-doc .work-body ul > li::before {
+  content: none;
+}
+
+.agent-doc .agent-human-link {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  color: inherit;
+}
+
+/* Editorial pages: shared chrome for non-home Human routes (work index,
+   work detail, writing, about). Inherits CSS vars from .human-shell. */
+:is(.human-shell, .agent-doc) .editorial {
+  width: 100%;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 32px clamp(20px, 4vw, 32px) 64px;
+}
+
+.agent-doc .editorial {
+  max-width: 500px;
+}
+
+:is(.human-shell, .agent-doc) .editorial h1 {
+  font-size: clamp(28px, 4vw, 40px);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  margin: 0 0 12px;
+  font-weight: 400;
+}
+
+:is(.human-shell, .agent-doc) .editorial h2 {
+  font-size: 18px;
+  margin: 32px 0 8px;
+  font-weight: 400;
+}
+
+:is(.human-shell, .agent-doc) .editorial h3 {
+  font-size: 14px;
+  margin: 24px 0 4px;
+  color: var(--muted);
+  font-weight: 400;
+}
+
+:is(.human-shell, .agent-doc) .editorial p,
+:is(.human-shell, .agent-doc) .editorial li {
+  color: var(--text);
+  margin: 0 0 12px;
+}
+
+:is(.human-shell, .agent-doc) .editorial ul {
+  padding-left: 20px;
+  margin: 0 0 16px;
+}
+
+:is(.human-shell, .agent-doc) .editorial .meta {
+  color: var(--muted);
+  font-size: 13px;
+  margin: 0 0 24px;
+}
+
+:is(.human-shell, .agent-doc) .editorial a {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  text-decoration-thickness: 1px;
+}
+
+.human-shell .editorial-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.human-shell .editorial-list li {
+  margin: 0;
+  border-top: 1px solid var(--soft);
+  padding: 12px 0;
+  display: flex;
+  gap: 16px;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.human-shell .editorial-list li:last-child {
+  border-bottom: 1px solid var(--soft);
+}
+
+.human-shell .editorial-list .row-meta {
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
