@@ -3,10 +3,11 @@
 import { useEffect, useRef } from "react";
 import { ASCII_IMAGE_SOURCES } from "@/lib/ascii-sources";
 
-const ASCII_REVEAL_RAMP = "$MBNQØW@&R8GD6S9ÖOH#ÉE5UK0ÄÅA2XP34ZC%VIF17YTJL[]?}{()<>|=+\\/^!\";*_:~,'-.·` ";
-const ASCII_IMAGE_RAMP = ASCII_REVEAL_RAMP;
+// Densest → lightest. Symbol + numeral vocabulary (matching the reference
+// look) so each density step reads evenly, without busy Latin letterforms.
+const ASCII_IMAGE_RAMP = "@#08&96543I2A?!<>=+*/\\:~-_,.·` ";
 const ASCII_IMAGE_MAX_DPR = 2;
-const ASCII_IMAGE_FRAME_MS = 76;
+const ASCII_IMAGE_FRAME_MS = 33;
 
 const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
 
@@ -75,7 +76,7 @@ function renderAsciiImageCanvas(
   const cssWidth = Math.max(1, Math.round(rect.width));
   const cssHeight = Math.max(1, Math.round(rect.height));
   const dpr = Math.min(window.devicePixelRatio || 1, ASCII_IMAGE_MAX_DPR);
-  const cellWidth = clamp(cssWidth / 96, 4.4, 6.8);
+  const cellWidth = clamp(cssWidth / 104, 3.9, 6.2);
   const lineHeight = cellWidth * 1.18;
   const columns = Math.ceil(cssWidth / cellWidth);
   const rows = Math.ceil(cssHeight / lineHeight);
@@ -150,9 +151,11 @@ function renderAsciiImageCanvas(
       const blue = pixels[pixelIndex + 2];
       const alpha = pixelStride === 4 ? pixels[pixelIndex + 3] / 255 : 1;
       const luma = (red * 0.2126 + green * 0.7152 + blue * 0.0722) / 255;
+      // Low spatial frequency so neighbouring cells stay in phase — the
+      // motion reads as a slow flowing wave instead of per-cell sparkle.
       const shimmer = prefersReducedMotion
         ? 0.5
-        : (Math.sin(time * 0.012 + column * 0.77 + row * 1.21) + 1) * 0.5;
+        : (Math.sin(time * 0.0016 + column * 0.14 + row * 0.18) + 1) * 0.5;
       const textureSeed = Math.sin((column + 1) * 12.9898 + (row + 1) * 78.233) * 43758.5453;
       const texture = textureSeed - Math.floor(textureSeed);
       const signal = Math.pow(clamp((luma - 0.08) / 0.92, 0, 1), 0.72);
